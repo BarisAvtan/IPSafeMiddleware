@@ -1,4 +1,5 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using WebApplication1.Filters;
 using WebApplication1.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ builder.Configuration.GetSection("IPList").Get<IPList>();
 
 builder.Services.Configure<IPList>(builder.Configuration.GetSection("IPList"));//Class set 
 
+//builder.Services.AddScoped<CheckWhiteList>() sayesinde her bir istekde CheckWhiteList çalışacak ve IOptions<IPList> ipList dolacak ve bu sayede
+//controller üzerinde bir cunstructor belirmemize gerek kalmayacak
+builder.Services.AddScoped<CheckWhiteList>();
 
 var lists = builder.Configuration.GetSection("IPList").Get<IPList>();
 
@@ -36,7 +40,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseMiddleware<IPSafeMiddleware>();
+//app.UseMiddleware<IPSafeMiddleware>();
 
 app.MapRazorPages();
 
